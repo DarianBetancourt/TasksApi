@@ -1,0 +1,241 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a Taskstore server",
+    "version": "1.0.0",
+    "title": "Taskstore",
+    "contact": {
+      "email": "apiteam@swagger.io",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "tasks",
+      "description": "Everything about your tasks",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/tasks": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Add a new task to the store",
+        "description": "",
+        "operationId": "addTask",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "task object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/task"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/tasks/findByStatus": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Finds tasks by status",
+        "description": "status values",
+        "operationId": "findTasksByStatus",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "done",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ],
+              "default": false
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/task"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Find task by ID",
+        "description": "Returns a single task",
+        "operationId": "gettaskById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "ID of task to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/task"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "task not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Updates a task in the store with form data",
+        "description": "",
+        "operationId": "updateTaskWithForm",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Task id to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "description": "Updated name of the task",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "done",
+            "in": "formData",
+            "description": "Updated status of the task",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Deletes a task",
+        "description": "",
+        "operationId": "deleteTask",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "Task id to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "task not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "task": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "make migrations"
+        },
+        "done": {
+          "type": "boolean",
+          "description": "pet status in the store",
+          "enum": [
+            false,
+            true
+          ]
+        }
+      },
+      "xml": {
+        "name": "Task"
+      }
+    }
+  }
+}
