@@ -1,4 +1,5 @@
 # TasksApi
+This is a Taskstore server, Este é um servidor de armazenamento de tarefas
 - cd TaskApi
 - npm install
 - npm run dev
